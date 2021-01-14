@@ -2,18 +2,15 @@
 
 Flutter plugin used to handle FlutterPlugin instances using ServiceLoader instead of official way.
 
-## Supported Platform
-
-Currently only Android platform.
-
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+Only for Android platform.
+1. On your android project create new Java resource folder (if you haven't create it, default path should be `src/main/resources`)
+2. Create services file `META-INF/services/io.flutter.embedding.engine.plugins.FlutterPlugin` in java resource folder
+3. Add your plugin implementation classes for example
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+```
+com.example.MyFlutterPluginA
+com.example.MyFlutterPluginB
+com.example.MyFlutterPluginC
+```
