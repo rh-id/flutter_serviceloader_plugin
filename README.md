@@ -1,6 +1,10 @@
 # flutter_serviceloader_plugin
 
-Flutter plugin used to handle FlutterPlugin instances using ServiceLoader instead of official way
+Flutter plugin used to handle FlutterPlugin instances using ServiceLoader instead of official way.
+
+## Supported Platform
+
+Currently only Android platform.
 
 ## Getting Started
 

@@ -1,7 +1,7 @@
 name: flutter_serviceloader_plugin
 description: Flutter plugin used to handle FlutterPlugin instances using ServiceLoader instead of official way
 version: 0.0.1
-author:
+author: Ruby Hartono
 homepage:
 
 environment:
