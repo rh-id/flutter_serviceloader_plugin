@@ -2,7 +2,7 @@
 
 Flutter plugin used to handle FlutterPlugin instances using ServiceLoader instead of defining it in `pubspec.yaml` dependencies.
 
-The benefit of using this plugin is that it works for plugin that execute dart function in background such as `android_alarm` plugin.
+The benefit of using this plugin is that it works for plugin that execute dart function in background such as `android_alarm_manager` plugin.
 
 In order to execute dart function in background we need to instantiate `new FlutterEngine(context)` and execute the dart function using the engine instance.
 The engine instance automatically register all plugins using reflection during instantiation (calling generated class `GeneratedPluginRegistrant.registerWith`).
