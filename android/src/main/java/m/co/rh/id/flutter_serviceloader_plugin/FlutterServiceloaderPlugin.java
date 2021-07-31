@@ -1,11 +1,16 @@
 package m.co.rh.id.flutter_serviceloader_plugin;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -17,19 +22,37 @@ import io.flutter.embedding.engine.plugins.service.ServicePluginBinding;
  * FlutterServiceloaderPlugin
  */
 public class FlutterServiceloaderPlugin implements FlutterPlugin, ActivityAware, ServiceAware {
+    private static final String TAG = FlutterServiceloaderPlugin.class.getName();
 
-    private final List<FlutterPlugin> flutterPluginList;
+    private List<FlutterPlugin> flutterPluginList;
 
     public FlutterServiceloaderPlugin() {
-        flutterPluginList = new ArrayList<>();
-        Iterator<FlutterPlugin> flutterPluginIterator = ServiceLoader.load(FlutterPlugin.class).iterator();
-        while (flutterPluginIterator.hasNext()) {
-            flutterPluginList.add(flutterPluginIterator.next());
-        }
     }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        // create instances of flutter plugin instead of global singleton from serviceLoader
+        // this is to avoid concurrency issue where App have multiple FlutterEngine instances
+        if (flutterPluginList == null) {
+            flutterPluginList = new ArrayList<>();
+            try {
+                InputStream is = this.getClass().getResourceAsStream("/META-INF/services/io.flutter.embedding.engine.plugins.FlutterPlugin");
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String className = br.readLine();
+                while (className != null) {
+                    Class<FlutterPlugin> clazz = (Class<FlutterPlugin>) Class.forName(className);
+                    FlutterPlugin flutterPlugin = clazz.newInstance();
+                    flutterPluginList.add(flutterPlugin);
+                    className = br.readLine();
+                }
+                br.close();
+                is.close();
+            } catch (Exception e) {
+                Log.e(TAG, "flutter_serviceloader_plugin error", e);
+                Toast.makeText(flutterPluginBinding.getApplicationContext(), "flutter_serviceloader_plugin error, see logs for details", Toast.LENGTH_LONG);
+                throw new RuntimeException(e);
+            }
+        }
         Iterator<FlutterPlugin> flutterPluginIterator = flutterPluginList.iterator();
         while (flutterPluginIterator.hasNext()) {
             flutterPluginIterator.next().onAttachedToEngine(flutterPluginBinding);
