@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -36,6 +37,13 @@ public class FlutterServiceloaderPlugin implements FlutterPlugin, ActivityAware,
         if (flutterPluginList == null) {
             flutterPluginList = new ArrayList<>();
             try {
+                /* ServiceLoader.load is not needed in the logic, it is used so that R8 keep
+                 * "/META-INF/services/io.flutter.embedding.engine.plugins.FlutterPlugin"
+                 * there shouldn't be any instances of FlutterPlugins,
+                 * because the instances are lazily loaded by iterator
+                 */
+                ServiceLoader.load(FlutterPlugin.class);
+
                 InputStream is = this.getClass().getResourceAsStream("/META-INF/services/io.flutter.embedding.engine.plugins.FlutterPlugin");
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String className = br.readLine();
