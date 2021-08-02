@@ -44,7 +44,7 @@ public class FlutterServiceloaderPlugin implements FlutterPlugin, ActivityAware,
                  */
                 ServiceLoader.load(FlutterPlugin.class);
 
-                InputStream is = this.getClass().getResourceAsStream("/META-INF/services/io.flutter.embedding.engine.plugins.FlutterPlugin");
+                InputStream is = this.getClass().getResourceAsStream("/META-INF/services/" + FlutterPlugin.class.getName());
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String className = br.readLine();
                 while (className != null) {
